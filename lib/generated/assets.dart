@@ -11,11 +11,14 @@ class Assets {
   static const String iconsGithub = 'assets/icons/github.png';
   static const String iconsPostman = 'assets/icons/postman.png';
   static const String iconsXd = 'assets/icons/xd.png';
+  static const String imagesBg = 'assets/images/bg.jpg';
   static const String imagesCircleBg = 'assets/images/circle_bg.png';
+  static const String imagesMainBg = 'assets/images/main_bg.jpg';
   static const String imagesMyProfile = 'assets/images/my_profile.png';
   static const String imagesProfileBg = 'assets/images/profile_bg.jpg';
   static const String imagesProfileImg = 'assets/images/profile_img.jpg';
   static const String imagesProjectThumnail = 'assets/images/project_thumnail.png';
+  static const String imagesSmarterLogo = 'assets/images/smarter_logo.png';
   static const String socialmediaFacebook = 'assets/socialmedia/facebook.png';
   static const String socialmediaGithub = 'assets/socialmedia/github.png';
   static const String socialmediaLinkedin = 'assets/socialmedia/linkedin.png';

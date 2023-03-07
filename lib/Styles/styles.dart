@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-Color customGreen = Color(0xff00D27B);
-Color lightGreen = Color(0xff00D78A);
-Color customBlack = Color(0xff53514F);
-Color darkGrey = Color(0xff4D4C4B);
-Color customGrey = Color(0xff747270);
+Color customGreen = const Color(0xff00D27B);
+Color lightGreen = const Color(0xff00D78A);
+Color customBlack = const Color(0xff53514F);
+Color darkGrey = const Color(0xff4D4C4B);
+Color customGrey = const Color(0xff747270);
 
 TextStyle textStyle1 = GoogleFonts.poppins(
   fontWeight: FontWeight.bold,
@@ -16,6 +16,13 @@ TextStyle textStyle1 = GoogleFonts.poppins(
 TextStyle textStyle2 = GoogleFonts.poppins(
     fontWeight: FontWeight.w600,
     fontSize: 15.0,
+    color: customBlack
+);
+
+
+TextStyle projectDetailsStyles = GoogleFonts.poppins(
+    fontWeight: FontWeight.w600,
+    fontSize: 12.0,
     color: customBlack
 );
 

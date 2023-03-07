@@ -1,11 +1,14 @@
+
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounce/flutter_bounce.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hovering/hovering.dart';
-import 'package:portfolio/Model/SecondProjectModel.dart';
 import 'package:portfolio/Styles/styles.dart';
-import 'package:show_up_animation/show_up_animation.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+
 
 import '../Model/FirstProjectModel.dart';
 import 'SoftwareSkill.dart';
@@ -19,10 +22,47 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  List mySkill = [1,2,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,11,1,1,1,1,];
+  List<Map<String,dynamic>> Projects = [];
+
+
+  Future<void> _launchUrl(String fileLink) async {
+    final Uri _url = Uri.parse(fileLink);
+    if (!await launchUrl(_url)) {
+      throw Exception('Could not launch $_url');
+    }
+  }
+
+
+  Future getProjects()async{
+    FirebaseFirestore.instance
+        .collection("Project")
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      querySnapshot.docs.forEach((doc) {
+        Projects.add({
+          "thumnail" : doc["thumnail"],
+          "title" : doc["Name"],
+          "description" : doc["Description"],
+          "projectLink" : doc["projectLink"],
+        });
+        setState(() {});
+      });
+    });
+  }
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getProjects();
+  }
+
 
   @override
   Widget build(BuildContext context) {
+    //getProjects();
+    print("$Projects");
     var getWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       body: Container(
@@ -61,7 +101,7 @@ class _HomePageState extends State<HomePage> {
                   width: double.infinity,
                   height: 50.0,
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: customBlack,
                     boxShadow: [
                       BoxShadow(
                         blurRadius: 5,
@@ -74,13 +114,15 @@ class _HomePageState extends State<HomePage> {
                     children: [
 
                       const SizedBox(width: 40.0,),
-
+                      Image.asset("assets/images/smarter_logo.png",height: 40,),
                       const Spacer(),
                       HoverContainer(
                         hoverHeight: 35.0,
                         hoverWidth: 35.0,
                         child: InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              _launchUrl("https://web.facebook.com/developerSajib88");
+                            },
                             splashColor: customGreen,
                             highlightColor: customGreen,
                             hoverColor: customGreen,
@@ -101,7 +143,9 @@ class _HomePageState extends State<HomePage> {
                         hoverHeight: 35.0,
                         hoverWidth: 35.0,
                         child: InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              _launchUrl("https://github.com/developerSajib88");
+                            },
                             splashColor: customGreen,
                             highlightColor: customGreen,
                             hoverColor: customGreen,
@@ -122,7 +166,9 @@ class _HomePageState extends State<HomePage> {
                         hoverHeight: 35.0,
                         hoverWidth: 35.0,
                         child: InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              _launchUrl("https://www.linkedin.com/in/sajib-hasan-2b89bb202/");
+                            },
                             splashColor: customGreen,
                             highlightColor: customGreen,
                             hoverColor: customGreen,
@@ -224,7 +270,7 @@ class _HomePageState extends State<HomePage> {
 
                                       const SoftwareSkill(),
 
-                                      const SizedBox(height: 55.0,),
+                                      const SizedBox(height: 35.0,),
 
 
                                       HoverContainer(
@@ -234,7 +280,19 @@ class _HomePageState extends State<HomePage> {
                                           width: 200.0,
                                           height: 45.0,
                                           child: ElevatedButton(
-                                            onPressed: (){},
+                                            onPressed: ()async{
+
+                                              FirebaseFirestore.instance
+                                                  .collection("Resume")
+                                                  .get()
+                                                  .then((QuerySnapshot querySnapshot) {
+                                                querySnapshot.docs.forEach((doc) {
+                                                  _launchUrl(doc["resumeLink"]);
+                                                });
+                                              });
+
+
+                                            },
                                             child: Text("DOWNLOAD RESUME",style: GoogleFonts.poppins(textStyle: TextStyle(color: Colors.white,fontWeight: FontWeight.bold)),),
                                             style: ElevatedButton.styleFrom(
                                               backgroundColor: customGreen
@@ -283,10 +341,10 @@ class _HomePageState extends State<HomePage> {
                       const SizedBox(height: 15.0,),
 
 
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 40.0),
-                        child: Text("What Project I Have",style: textStyle3,),
-                      ),
+                      Container(
+                        width: double.infinity,
+                          alignment: Alignment.center,
+                          child: Text("What Project I Have",style: textStyle3,)),
 
 
 
@@ -294,23 +352,88 @@ class _HomePageState extends State<HomePage> {
 
 
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                        padding: const EdgeInsets.symmetric(horizontal: 130.0),
                         child: Wrap(
                           spacing: 0.0,
                           children: [
-                            for (int i =0; i<mySkill.length; i++)
+                            for (int i =0; i<Projects.length; i++)
                               Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: Visibility(
-                                    visible: i % 2 == 0,
-                                    child:  FirstProjectModel(),
-                                    replacement: SecondProjectModel(),
-                                  )
+                                  child: FirstProjectModel(thumLink: Projects[i]["thumnail"], title: Projects[i]["title"], description: Projects[i]["description"],projectLink: Projects[i]["projectLink"],)
                               )
 
                           ],
                         ),
                       ),
+
+
+                      const SizedBox(height: 20.0,),
+
+
+                      Container(
+                        width: double.infinity,
+                        color: customGreen,
+                        alignment: Alignment.centerLeft,
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Row(
+                            children: [
+                              FittedBox(
+                                child: Text("2023. Sajib Hasan - All rights reserved.",
+                                    style: GoogleFonts.poppins(
+                                        textStyle: const TextStyle(
+                                            color: Colors.white,
+                                        )
+                                    ),
+                                ),
+                              ),
+
+                              const Spacer(),
+
+                              const Icon(Icons.phone_iphone,color: Colors.white,size: 15,),
+                              const SizedBox(width: 5.0,),
+                              Text("01923285988",
+                                style: GoogleFonts.poppins(
+                                    textStyle: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12
+                                    )
+                                ),
+                              ),
+
+
+                              const SizedBox(width: 10.0,),
+
+
+                              const Icon(Icons.mail_outline_rounded,color: Colors.white,size: 15,),
+                              const SizedBox(width: 5.0,),
+                              Text("developersajib88@gmail.com",
+                                style: GoogleFonts.poppins(
+                                    textStyle: const TextStyle(
+                                      color: Colors.white,
+                                    )
+                                ),
+                              ),
+
+
+
+                              const SizedBox(width: 10.0,),
+
+                              const Icon(Icons.location_on_outlined,color: Colors.white,size: 15,),
+                              const SizedBox(width: 5.0,),
+                              Text("Mymensingh, Dhaka, Bangladesh",
+                                style: GoogleFonts.poppins(
+                                    textStyle: const TextStyle(
+                                      color: Colors.white,
+                                    )
+                                ),
+                              ),
+
+
+                            ],
+                          ),
+                        ),
+                      )
 
 
 

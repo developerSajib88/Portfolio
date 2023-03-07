@@ -41,6 +41,10 @@ dependencies:
   animated_text_kit: ^4.2.2
   show_up_animation: ^2.0.0
   hovering: ^1.0.4
+  firebase_core: ^2.7.0
+  cloud_firestore: ^4.4.3
+  firebase_storage: ^11.0.14
+  url_launcher: ^6.1.10
 
 dev_dependencies:
   flutter_test:

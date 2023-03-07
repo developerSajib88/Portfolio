@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:hovering/hovering.dart';
 import 'package:show_up_animation/show_up_animation.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../Styles/styles.dart';
 
 class SecondProjectModel extends StatefulWidget {
-  const SecondProjectModel({
+  String thumLink;
+  String title;
+  String description;
+  String projectLink;
+
+  SecondProjectModel({
     super.key,
+    required this.thumLink,
+    required this.title,
+    required this.description,
+    required this.projectLink
   });
 
   @override
@@ -14,6 +24,14 @@ class SecondProjectModel extends StatefulWidget {
 }
 
 class _SecondProjectModelState extends State<SecondProjectModel> {
+
+  Future<void> _launchUrl(String fileLink) async {
+    final Uri _url = Uri.parse(fileLink);
+    if (!await launchUrl(_url)) {
+      throw Exception('Could not launch $_url');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return ShowUpAnimation(
@@ -38,12 +56,14 @@ class _SecondProjectModelState extends State<SecondProjectModel> {
                       width: double.infinity,
                       height: 300,
                       child: InkWell(
-                        onTap: (){},
+                        onTap: (){
+                          _launchUrl(widget.projectLink);
+                        },
                         child: ClipRRect(
                             borderRadius: BorderRadius
                                 .circular(10.0),
-                            child: Image.asset(
-                              "assets/images/project_thumnail.png",
+                            child: Image.network(
+                              widget.thumLink,
                               width: double.infinity,
                               height: double.infinity,
                               fit: BoxFit.cover,)),
@@ -63,7 +83,7 @@ class _SecondProjectModelState extends State<SecondProjectModel> {
                           SizedBox(
                             width: double.infinity,
                             child: Text(
-                              "Breaking News - World News Today",
+                              widget.title,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
                               style: animtatedTextStyle2,),
@@ -73,10 +93,7 @@ class _SecondProjectModelState extends State<SecondProjectModel> {
                             width: double.infinity,
                             height: 200,
                             child: Text(
-                              "I am a Flutter Developer (IOS & Android and Web) platform. "
-                                  "I have been working on Flutter development in last year and I have been 1+ years of"
-                                  " development Experience and I have also a basic knowledge XD/Figma. "
-                                  "Future I will learn Machine learning/Artificial Intelligence.",
+                              widget.description,
                               maxLines: 8,
                               overflow: TextOverflow.ellipsis,
                               style: textStyle2,),
